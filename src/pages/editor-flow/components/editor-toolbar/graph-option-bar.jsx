@@ -9,7 +9,15 @@ import ToolbarButton from '@/pages/editor-flow/components/editor-toolbar/toolbar
 
 const FileSaver = require('file-saver');
 
-const GraphOptionBar = ({ onGetGraphData = noop, onLoadData = noop }) => {
+interface IGraphOptionBar {
+  onGetGraphData: Function;
+  onLoadData: Function;
+}
+
+const GraphOptionBar: React.FC<IGraphOptionBar> = ({
+  onGetGraphData = noop,
+  onLoadData = noop,
+}) => {
   const handleSave2Local = () => {
     const graphData = onGetGraphData();
     saveLocalGraph(graphData);
