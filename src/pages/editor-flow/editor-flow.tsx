@@ -1,69 +1,107 @@
-import { Col, message, Row } from 'antd';
-import GGEditor, { Flow } from 'gg-editor';
-import _ from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
-import EditorMinimap from './components/editor-minimap';
-import FlowContextMenu from './components/editor-context-menu/flow-context-menu';
-import FlowDetailPanel from './components/editor-detail-panel/flow-detail-panel';
-import FlowItemPanel from './components/editor-item-panel/flow-Item-panel';
-import FlowToolbar from './components/editor-toolbar/flow-toolbar';
-import styles from './styles.less';
-import GraphOptionBar from '@/pages/editor-flow/components/editor-toolbar/graph-option-bar';
-import { loadLocalGraph } from '@/service/util';
+import Designer from 'wfd'
+import React, { Component } from 'react'
+import { Button, Menu, Modal } from 'antd'
+import 'antd/dist/antd.less'
 
-GGEditor.setTrackable(false);
+class Demo extends Component {
+  constructor(props) {
+    super(props)
+    this.wfdRef = React.createRef()
+  }
 
-const EditorFlow = () => {
-  const flow = useRef<React.Component>(null);
-  const [data, setData] = useState({});
+  state = {
+    modalVisible: false,
+    selectedLang: 'zh',
+  }
 
-  const handleRefreshData = _.memoize((theData: object) => {
-    setData(theData);
-    message.info('画布刷新');
-  });
+  langMenu = (
+    <Menu onClick={(lang) => {
+      this.changeLang(lang)
+    }}>
+      <Menu.Item key="zh">
+            <span role="img">
+              {'🇨🇳'}
+            </span>
+        {' 简体中文'}
+      </Menu.Item>
+      <Menu.Item key="en">
+            <span role="img">
+              {'🇬🇧'}
+            </span>
+        {' English'}
+      </Menu.Item>
+    </Menu>
+  )
 
-  useEffect(() => {
-    const graphData = loadLocalGraph();
-    setData(graphData);
-  }, [flow.current]);
+  handleModalVisible(modalVisible) {
+    this.setState({ modalVisible })
+  }
 
-  const handleGraphData = () => {
-    if (flow.current) {
-      // @ts-ignore
-      return flow.current.graph.save();
+  changeLang({ key }) {
+    this.setState({ selectedLang: key })
+  }
+
+  render() {
+    const data = {
+      nodes: [{ id: 'startNode1', x: 50, y: 200, label: '', clazz: 'start' },
+        { id: 'startNode2', x: 50, y: 320, label: '', clazz: 'timerStart' },
+        { id: 'taskNode1', x: 200, y: 200, label: '主任审批', clazz: 'userTask' },
+        { id: 'taskNode2', x: 400, y: 200, label: '经理审批', clazz: 'scriptTask' },
+        { id: 'gatewayNode', x: 400, y: 320, label: '金额大于1000', clazz: 'inclusiveGateway' },
+        { id: 'taskNode3', x: 400, y: 450, label: '董事长审批', clazz: 'receiveTask' },
+        { id: 'catchNode1', x: 600, y: 200, label: '等待结束', clazz: 'signalCatch' },
+        { id: 'endNode', x: 600, y: 320, label: '', clazz: 'end' }],
+      edges: [{ source: 'startNode1', target: 'taskNode1', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow' },
+        { source: 'startNode2', target: 'gatewayNode', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow' },
+        { source: 'taskNode1', target: 'catchNode1', sourceAnchor: 0, targetAnchor: 0, clazz: 'flow' },
+        { source: 'taskNode1', target: 'taskNode2', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow' },
+        { source: 'taskNode2', target: 'gatewayNode', sourceAnchor: 1, targetAnchor: 0, clazz: 'flow' },
+        { source: 'taskNode2', target: 'taskNode1', sourceAnchor: 2, targetAnchor: 2, clazz: 'flow' },
+        { source: 'gatewayNode', target: 'taskNode3', sourceAnchor: 2, targetAnchor: 0, clazz: 'flow' },
+        { source: 'gatewayNode', target: 'endNode', sourceAnchor: 1, targetAnchor: 2, clazz: 'flow' },
+        { source: 'taskNode3', target: 'endNode', sourceAnchor: 1, targetAnchor: 1, clazz: 'flow' },
+        { source: 'catchNode1', target: 'endNode', sourceAnchor: 1, targetAnchor: 0, clazz: 'flow' }],
     }
-    return {};
-  };
 
-  return (
-    <GGEditor className={styles.editor}>
-      <Row className={styles.editorHd}>
-        <Col span={16}>
-          <FlowToolbar />
-        </Col>
-        <Col span={8}>
-          <GraphOptionBar
-            onGetGraphData={handleGraphData}
-            onLoadData={handleRefreshData}
-          />
-        </Col>
-      </Row>
+    const data1 = {
+      nodes: [{ id: 'startNode1', x: 50, y: 200, label: '', clazz: 'start' },
+        { id: 'startNode2', x: 50, y: 320, label: '', clazz: 'timerStart' },
+        { id: 'taskNode1', x: 200, y: 200, label: '主任审批', clazz: 'userTask' },
+        { id: 'taskNode2', x: 400, y: 200, label: '经理审批', clazz: 'scriptTask', active: true },
+        { id: 'gatewayNode', x: 400, y: 320, label: '金额大于1000', clazz: 'gateway' },
+        { id: 'taskNode3', x: 400, y: 450, label: '董事长审批', clazz: 'receiveTask' },
+        { id: 'catchNode1', x: 600, y: 200, label: '等待结束', clazz: 'signalCatch' },
+        { id: 'endNode', x: 600, y: 320, label: '', clazz: 'end' }],
+      edges: [{ source: 'startNode1', target: 'taskNode1', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow' },
+        { source: 'startNode2', target: 'gatewayNode', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow' },
+        { source: 'taskNode1', target: 'catchNode1', sourceAnchor: 0, targetAnchor: 0, clazz: 'flow' },
+        { source: 'taskNode1', target: 'taskNode2', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow' },
+        { source: 'taskNode2', target: 'gatewayNode', sourceAnchor: 1, targetAnchor: 0, clazz: 'flow' },
+        { source: 'taskNode2', target: 'taskNode1', sourceAnchor: 2, targetAnchor: 2, clazz: 'flow' },
+        { source: 'gatewayNode', target: 'taskNode3', sourceAnchor: 2, targetAnchor: 0, clazz: 'flow' },
+        { source: 'gatewayNode', target: 'endNode', sourceAnchor: 1, targetAnchor: 2, clazz: 'flow' },
+        { source: 'taskNode3', target: 'endNode', sourceAnchor: 1, targetAnchor: 1, clazz: 'flow' },
+        { source: 'catchNode1', target: 'endNode', sourceAnchor: 1, targetAnchor: 0, clazz: 'flow' }],
+    }
 
-      <Row className={styles.editorBd}>
-        <Col span={4} className={styles.editorSidebar}>
-          <FlowItemPanel />
-          <EditorMinimap />
-        </Col>
-        <Col span={15} className={styles.editorContent}>
-          <Flow className={styles.flow} ref={flow} data={data} />
-        </Col>
-        <Col span={5} className={styles.editorSidebar}>
-          <FlowDetailPanel project="测试项目" />
-        </Col>
-      </Row>
+    const candidateUsers = [{ id: '1', name: 'Tom' }, { id: '2', name: 'Steven' }, { id: '3', name: 'Andy' }]
+    const candidateGroups = [{ id: '1', name: 'Manager' }, { id: '2', name: 'Security' }, { id: '3', name: 'OA' }]
+    const height = 600
+    const { modalVisible, selectedLang } = this.state
+    return (
+      <div>
+        <Button style={{ float: 'right', marginTop: 6, marginRight: 6 }}>保存</Button>
+        <Button style={{ float: 'right', marginTop: 6, marginRight: 6 }} onClick={() => this.wfdRef.current.graph.save()}>导出</Button>
+        <Button style={{ float: 'right', marginTop: 6, marginRight: 6 }}>导入</Button>
+        <Button style={{ float: 'right', marginTop: 6, marginRight: 6 }} onClick={() => this.handleModalVisible(true)}>查看流程图</Button>
 
-      <FlowContextMenu />
-    </GGEditor>
-  );
-};
-export default EditorFlow;
+        <Designer ref={this.wfdRef} data={data} height={height} mode={'edit'} users={candidateUsers} groups={candidateGroups} lang={selectedLang} />
+        <Modal title="查看流程图" visible={modalVisible} onCancel={() => this.handleModalVisible(false)} width={800} maskClosable={false} footer={null} destroyOnClose bodyStyle={{ height }}>
+          <Designer data={data1} height={height - 40} isView />
+        </Modal>
+      </div>
+    )
+  }
+}
+
+export default Demo

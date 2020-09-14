@@ -2,7 +2,12 @@ import { message, Modal, Upload } from 'antd';
 import React from 'react';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { noop, parseJSON, saveLocalGraph } from '@/service/util';
+import {
+  loadLocalGraph,
+  noop,
+  parseJSON,
+  saveLocalGraph,
+} from '@/service/util';
 
 import styles from './graph-option-bar.less';
 import ToolbarButton from '@/pages/editor-flow/components/editor-toolbar/toolbar-button';
@@ -14,10 +19,8 @@ interface IGraphOptionBar {
   onLoadData: Function;
 }
 
-const GraphOptionBar: React.FC<IGraphOptionBar> = ({
-  onGetGraphData = noop,
-  onLoadData = noop,
-}) => {
+const GraphOptionBar: React.FC<IGraphOptionBar> = props => {
+  const { onGetGraphData = noop, onLoadData = noop } = props;
   const handleSave2Local = () => {
     const graphData = onGetGraphData();
     saveLocalGraph(graphData);
@@ -30,19 +33,18 @@ const GraphOptionBar: React.FC<IGraphOptionBar> = ({
     const blob = new Blob([JSON.stringify(graphData)], {
       type: 'text/plain;charset=utf-8',
     });
-    const fileName = 'page_' + moment().format('YYYY_MM_DD_HHmmSS') + '.json';
+    const fileName = 'page_' + moment().format('YYYY_MM_DD_HHmmss') + '.json';
     FileSaver.saveAs(blob, fileName);
   };
 
   const handleLoadFromLocal = () => {
-    const theData = window.localStorage.getItem('graphData') || '{}';
-    const graphData = JSON.parse(theData);
+    const graphData = loadLocalGraph();
     onLoadData(graphData);
   };
 
-  const handleLoadFromFile = file => {
+  const handleLoadFromFile = (file: any) => {
     const reader = new FileReader();
-    reader.onload = event => {
+    reader.onload = (event: any) => {
       const graphData = parseJSON(event.target.result);
       Modal.confirm({
         title: 'Confirm',

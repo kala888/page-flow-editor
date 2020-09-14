@@ -1,34 +1,31 @@
-import { Divider } from 'antd';
-import React from 'react';
-import { Toolbar } from 'gg-editor';
-import ToolbarButton from './toolbar-button';
-import styles from './flow-toolbar.less';
+import { Divider } from 'antd'
+import React from 'react'
+import { constants } from 'gg-editor'
+import ToolbarButton from './toolbar-button'
+import styles from './flow-toolbar.less'
+
+const { EditorCommand } = constants;
 
 const FlowToolbar: React.FC<any> = () => (
-  <Toolbar className={styles.toolbar}>
-    <ToolbarButton command="undo" />
-    <ToolbarButton command="redo" />
+  <div className={styles.toolbar}>
+    <ToolbarButton command={EditorCommand.Undo} />
+    <ToolbarButton command={EditorCommand.Redo} />
+    <ToolbarButton command={EditorCommand.Add} />
     <Divider type="vertical" />
-    <ToolbarButton command="copy" />
-    <ToolbarButton command="paste" />
-    <ToolbarButton command="delete" />
+    <ToolbarButton command={EditorCommand.Update} />
+    <ToolbarButton command={EditorCommand.Copy} />
+    <ToolbarButton command={EditorCommand.Paste} />
+    <ToolbarButton command={EditorCommand.Remove} />
     <Divider type="vertical" />
-    <ToolbarButton command="zoomIn" icon="zoom-in" text="Zoom In" />
-    <ToolbarButton command="zoomOut" icon="zoom-out" text="Zoom Out" />
-    <ToolbarButton command="autoZoom" icon="fit-map" text="Fit Map" />
-    <ToolbarButton command="resetZoom" icon="actual-size" text="Actual Size" />
+    <ToolbarButton command={EditorCommand.ZoomIn} icon="zoom-in" text="Zoom In" />
+    <ToolbarButton command={EditorCommand.ZoomOut} icon="zoom-out" text="Zoom Out" />
     <Divider type="vertical" />
-    <ToolbarButton command="toBack" icon="to-back" text="To Back" />
-    <ToolbarButton command="toFront" icon="to-front" text="To Front" />
-    <Divider type="vertical" />
-    <ToolbarButton
-      command="multiSelect"
-      icon="multi-select"
-      text="Multi Select"
-    />
-    <ToolbarButton command="addGroup" icon="group" text="Add Group" />
-    <ToolbarButton command="unGroup" icon="ungroup" text="Ungroup" />
-  </Toolbar>
-);
+    {/*<ToolbarButton command={EditorCommand.Subtopic} icon="fit-map" text="Fit Map" />*/}
+    {/*<ToolbarButton command={EditorCommand.Topic} icon="actual-size" text="Actual Size" />*/}
+    {/*<Divider type="vertical" />*/}
+    {/*<ToolbarButton command={EditorCommand.Fold} icon="group" text="Add Group" />*/}
+    {/*<ToolbarButton command={EditorCommand.Unfold} icon="ungroup" text="Ungroup" />*/}
+  </div>
+)
 
-export default FlowToolbar;
+export default FlowToolbar

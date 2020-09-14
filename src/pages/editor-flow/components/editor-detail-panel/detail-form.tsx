@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card, Form, Input, InputNumber, Select, Switch, Tabs } from 'antd';
-import { withPropsAPI } from 'gg-editor';
 import _ from 'lodash';
 import { isEmpty } from '@/service/util';
+import DynamicProps from '@/pages/editor-flow/components/editor-detail-panel/dyn/dynamic-props';
+import { IDynamicField } from '@/pages/editor-flow/components/editor-detail-panel/dyn/dynamic-field';
 
 const { TabPane } = Tabs;
 const { Item } = Form;
@@ -150,11 +151,14 @@ class DetailForm extends React.Component<DetailFormProps> {
           {this.renderCommonPropList(edgePropList)}
         </TabPane>
         <TabPane tab="请求参数" key="2">
-          <Form initialValues={{ extra }}>
-            <Item label="Label" name="label" {...inlineFormItemLayout}>
-              <Input onBlur={this.handleInputBlur('label')} />
-            </Item>
-          </Form>
+          <DynamicProps
+            extra={extra}
+            onChange={(result: Array<IDynamicField>) => {
+              this.handleFieldChange({
+                extra: result,
+              });
+            }}
+          />
         </TabPane>
       </Tabs>
     );
@@ -266,4 +270,5 @@ class DetailForm extends React.Component<DetailFormProps> {
   }
 }
 
-export default withPropsAPI(DetailForm as any);
+// export default withPropsAPI(DetailForm as any)
+export default DetailForm;
