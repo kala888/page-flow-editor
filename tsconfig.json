@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "noImplicitAny": false,
     "outDir": "build/dist",
     "module": "esnext",
     "target": "esnext",
@@ -17,6 +18,9 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "strict": true,
+    "esModuleInterop": true,
+    "declaration": false,
+    "removeComments": true,
     "paths": {
       "@/*": ["./src/*"],
       "@@/*": ["./src/.umi/*"]
