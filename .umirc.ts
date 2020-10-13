@@ -5,5 +5,5 @@ export default defineConfig({
     type: 'none',
   },
   hash: true,
-  routes: [{ path: '/', component: '@/pages/editor-flow' }],
+  routes: [{ path: '/', component: '@/pages/editor-flow/editor-flow' }],
 });

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-
+import { message } from 'antd';
 // null=> true
 // true=> true
 // 1 => false
@@ -49,7 +49,12 @@ export const noop = () => {};
 
 export const loadLocalGraph = () => {
   const theData = window.localStorage.getItem('graphData') || '{}';
-  return JSON.parse(theData);
+  try {
+    return JSON.parse(theData);
+  } catch (e) {
+    message.error('解析数据失败');
+    return {};
+  }
 };
 export const saveLocalGraph = (graphData = {}) => {
   const data = _.isString(graphData) ? graphData : JSON.stringify(graphData);
