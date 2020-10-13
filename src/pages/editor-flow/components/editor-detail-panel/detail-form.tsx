@@ -147,6 +147,7 @@ class DetailForm extends React.Component<DetailFormProps> {
   renderEdgeDetail = () => {
     const { extra } = this.item.getModel();
     const values = this.getCommonPropValues(edgePropList);
+    console.log('1231231extra', extra);
     return (
       <Tabs defaultActiveKey="1" centered>
         <TabPane tab="属性" key="1">

@@ -23,18 +23,25 @@ const DynamicField: React.FC<IDynamicField> = props => {
     setField(props);
   }, [props]);
 
-  const handleTypeChange = (value: string) => {
-    console.log(value);
-    setField(pre => ({
-      ...pre,
-      type: value,
-    }));
+  const handleFiledChange = (newField: any) => {
+    setField(pre => {
+      const v = {
+        id: pre.id,
+        type: pre.type || 'string',
+        name: pre.name,
+        ...newField,
+      };
+      onSave(v);
+      return v;
+    });
   };
-  const handleNameChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setField(pre => ({
-      ...pre,
-      name: e.currentTarget.value,
-    }));
+
+  const handleTypeChange = (value: string) => {
+    console.log('handle field type change', value);
+    handleFiledChange({ type: value });
+  };
+  const handleFileNameChange = (e: React.FormEvent<HTMLInputElement>) => {
+    handleFiledChange({ name: e.currentTarget.value });
   };
   const handleRemove = () => {
     onRemove();
@@ -61,7 +68,7 @@ const DynamicField: React.FC<IDynamicField> = props => {
         <Option value="tab">Tab页</Option>
         <Option value="pagination">翻页标记</Option>
       </Select>
-      <Input onBlur={handleNameChange} defaultValue={filed.name} />
+      <Input onBlur={handleFileNameChange} defaultValue={filed.name} />
       <CheckSquareFilled className={styles.icon} onClick={handleSave} />
       <CloseCircleOutlined className={styles.icon} onClick={handleRemove} />
     </div>
