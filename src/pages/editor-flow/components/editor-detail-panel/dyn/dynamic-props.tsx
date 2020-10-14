@@ -25,7 +25,8 @@ const DynamicProps: React.FC<IDynamicProps> = props => {
   const handleAddNew = () => {
     setPropList(pre => {
       const id = `p${Date.now().valueOf()}`;
-      return _.concat([], pre, [{ id }]);
+      const name = 'no-name';
+      return _.concat([], pre, [{ id, name }]);
     });
   };
 

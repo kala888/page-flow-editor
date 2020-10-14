@@ -67,6 +67,11 @@ const DynamicField: React.FC<IDynamicField> = props => {
         <Option value="string">字符串</Option>
         <Option value="tab">Tab页</Option>
         <Option value="pagination">翻页标记</Option>
+        <Option value="integer">整数</Option>
+        <Option value="decimal">浮点数</Option>
+        <Option value="date">日期时间</Option>
+        <Option value="boolean">布尔值</Option>
+        <Option value="NA">强制无参</Option>
       </Select>
       <Input onBlur={handleFileNameChange} defaultValue={filed.name} />
       <CheckSquareFilled className={styles.icon} onClick={handleSave} />
