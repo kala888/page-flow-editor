@@ -207,7 +207,6 @@ class DetailForm extends React.Component<DetailFormProps> {
     if (type === 'select') {
       return (
         <Select
-          defaultValue={defaultValue}
           onChange={(value: any) => this.handleFieldChange({ [name]: value })}
         >
           {options.map(it => (

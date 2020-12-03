@@ -33,13 +33,13 @@ const GraphOptionBar: React.FC<IGraphOptionBar> = props => {
     const blob = new Blob([JSON.stringify(graphData)], {
       type: 'text/plain;charset=utf-8',
     });
-    const fileName =
-      'jobs/page_' + moment().format('YYYY_MM_DD_HHmmss') + '.json';
+    const fileName = 'page_' + moment().format('YYYY_MM_DD_HHmmss') + '.json';
     FileSaver.saveAs(blob, fileName);
   };
 
   const handleLoadFromLocal = () => {
     const graphData = loadLocalGraph();
+    preProcessLoadedData(graphData);
     onLoadData(graphData);
   };
 
@@ -49,6 +49,7 @@ const GraphOptionBar: React.FC<IGraphOptionBar> = props => {
       if (item.needLogin == undefined) {
         item.needLogin = true;
       } else if (item.needLogin) {
+        delete item.color;
       } else {
         item.color = 'green';
       }
