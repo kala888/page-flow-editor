@@ -33,7 +33,8 @@ const GraphOptionBar: React.FC<IGraphOptionBar> = props => {
     const blob = new Blob([JSON.stringify(graphData)], {
       type: 'text/plain;charset=utf-8',
     });
-    const fileName = 'page_' + moment().format('YYYY_MM_DD_HHmmss') + '.json';
+    const fileName =
+      'jobs/page_' + moment().format('YYYY_MM_DD_HHmmss') + '.json';
     FileSaver.saveAs(blob, fileName);
   };
 
@@ -42,10 +43,24 @@ const GraphOptionBar: React.FC<IGraphOptionBar> = props => {
     onLoadData(graphData);
   };
 
+  const preProcessLoadedData = (graphData: any) => {
+    console.info('loaded data: ', graphData);
+    graphData.edges.forEach((item: any) => {
+      if (item.needLogin == undefined) {
+        item.needLogin = true;
+      } else if (item.needLogin) {
+      } else {
+        item.color = 'green';
+      }
+    });
+  };
+
   const handleLoadFromFile = (file: any) => {
     const reader = new FileReader();
     reader.onload = (event: any) => {
       const graphData = parseJSON(event.target.result);
+      preProcessLoadedData(graphData);
+
       Modal.confirm({
         title: 'Confirm',
         icon: <ExclamationCircleOutlined />,

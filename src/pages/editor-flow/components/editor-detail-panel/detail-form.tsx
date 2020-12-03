@@ -193,6 +193,8 @@ class DetailForm extends React.Component<DetailFormProps> {
   renderFlexField = (field: CommonField) => {
     const { name, type = 'input', options = [], defaultValue } = field;
 
+    console.log('field', field, defaultValue);
+
     if (type === 'integer') {
       return (
         <InputNumber
@@ -220,7 +222,7 @@ class DetailForm extends React.Component<DetailFormProps> {
     if (type === 'boolean') {
       return (
         <Switch
-          defaultChecked
+          defaultChecked={defaultValue}
           onChange={(value: any) => this.handleFieldChange({ [name]: value })}
         />
       );
@@ -234,8 +236,11 @@ class DetailForm extends React.Component<DetailFormProps> {
     }
 
     return list.map(field => {
-      const { id, label, name } = field;
+      const { id, label, name, type } = field;
       const key = id + name;
+      console.log('handle data', field);
+      console.log('type is ', type);
+
       return (
         <Item
           key={key}
@@ -243,6 +248,7 @@ class DetailForm extends React.Component<DetailFormProps> {
           name={name}
           {...inlineFormItemLayout}
           style={{ marginBottom: 6 }}
+          valuePropName={type === 'boolean' ? 'checked' : 'value'}
         >
           {this.renderFlexField(field)}
         </Item>
